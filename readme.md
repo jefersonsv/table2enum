@@ -22,14 +22,14 @@ You must provide the below parameters.
 
 ```bash
 dotnet table2enum.dll ^
-    --table=CADSUF_TIPO_REQUERIMENTO ^
-    -id TRE_ID ^
-    -d TRE_DS ^
-    -cs="data source=172.24.128.19;initial catalog=cadsuf-fase2;persist security info=True;user id=cadsuf-fase2;password=cadsuf-fase2;MultipleActiveResultSets=True" ^
-    -csf "C:\TFS\AM_SUFRAMA\CADSUF\Fontes\src\Suframa.Cadsuf.CrossCutting.DataTransferObject\Enum\EnumTipoRequerimento.cs" ^
-    -tsf "C:\TFS\AM_SUFRAMA\CADSUF\Fontes\src\Suframa.Cadsuf.UserInterface\www\app\shared\enums\EnumTipoRequerimento.ts" ^
-    -c EnumTipoRequerimento ^
-    -ns Suframa.Cadsuf.CrossCutting.DataTransferObject.Enum ^
+    --table=CustomerType ^
+    -id CustomerTypeID ^
+    -d CustomerTypeDesc ^
+    -cs="Server=127.0.0.1;Database=master;Trusted_Connection=True;" ^
+    -csf "C:\Temp\EnumCustomerType.cs" ^
+    -tsf "C:\Temp\EnumCustomerType.ts" ^
+    -c EnumCustomerType ^
+    -ns Domain.Enum ^
     -i System.ComponentModel
 ```
 
