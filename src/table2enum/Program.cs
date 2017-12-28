@@ -9,12 +9,14 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using EnsureThat;
+using System.Xml.Linq;
+using System.IO;
 
 namespace table2enum
 {
-    internal class Program
+    public class Program
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             System.AppDomain.CurrentDomain.UnhandledException += HandlerError;
 
@@ -40,6 +42,7 @@ namespace table2enum
         private static void Gen(CommandLineApplication command)
         {
             var connectionStringOption = command.Option("-cs | --connection-string", "Connection string to connect SQL Server database.", CommandOptionType.SingleValue);
+            var connectionStringConfigOption = command.Option("-cscf | --connection-string-config-file", "Connection string configuration file.", CommandOptionType.SingleValue);
             var tableOption = command.Option("-t | --table", "Table name.", CommandOptionType.SingleValue);
             var idOption = command.Option("-id | --identification-column", "ID column name.", CommandOptionType.SingleValue);
             var descriptionOption = command.Option("-d | --description-column", "Description column name.", CommandOptionType.SingleValue);
@@ -47,39 +50,30 @@ namespace table2enum
             var typescriptOption = command.Option("-tsf | --typescript-file", "Typescript export filename.", CommandOptionType.SingleValue);
             var classNameOption = command.Option("-c | --class-name", "Class name of object.", CommandOptionType.SingleValue);
             var nameSpaceOption = command.Option("-ns | --name-space", "Namespace of object.", CommandOptionType.SingleValue);
-            var importsOption = command.Option("-i | --imports", "Namespace to imports.", CommandOptionType.MultipleValue);
+            var importsOption = command.Option("-i | --imports", "Namespaces to import.", CommandOptionType.MultipleValue);
             var blackWordsOption = command.Option("-bw | --black-words", "Exclude black words.", CommandOptionType.MultipleValue);
 
             command.OnExecute(() =>
             {
                 // Validation
-                Ensure.Bool.IsTrue(connectionStringOption.HasValue(), "-cs");
-                Ensure.Bool.IsTrue(tableOption.HasValue());
-                Ensure.Bool.IsTrue(idOption.HasValue());
-                Ensure.Bool.IsTrue(descriptionOption.HasValue());
-                Ensure.Bool.IsTrue(classNameOption.HasValue());
-                Ensure.Bool.IsTrue(tableOption.HasValue());
-                Ensure.Bool.IsTrue(nameSpaceOption.HasValue());
-                Ensure.Bool.IsTrue(importsOption.HasValue());
+                Ensure.Bool.IsTrue(tableOption.HasValue(), "-t | --table");
+                Ensure.Bool.IsTrue(idOption.HasValue(), "-id | --identification-column");
+                Ensure.Bool.IsTrue(descriptionOption.HasValue(), "-d | --description-column");
+                Ensure.Bool.IsTrue(classNameOption.HasValue(), "-c | --class-name");
+                Ensure.Bool.IsTrue(connectionStringOption.HasValue() || connectionStringConfigOption.HasValue(), "-cs | -cscf", opts => opts.WithMessage("You must specify connection string or XML config file"));
+                Ensure.Bool.IsFalse(connectionStringOption.HasValue() && connectionStringConfigOption.HasValue(), "-cs | -cscf", opts => opts.WithMessage("You can't specify twice parameters together"));
+                Ensure.Bool.IsTrue(csharpOption.HasValue() || typescriptOption.HasValue(), "-csf | -tsf", opts => opts.WithMessage("You must specify at once destiny file"));
 
-                if (!csharpOption.HasValue() && !typescriptOption.HasValue())
+                if (csharpOption.HasValue())
                 {
-                    throw new Exception("The option -csf or -tsf must be informed.");
+                    Ensure.Bool.IsTrue(nameSpaceOption.HasValue(), "-ns | --name-space");
+                    Ensure.Bool.IsTrue(importsOption.HasValue(), "-i | --imports");
                 }
 
-                if (csharpOption.HasValue() && !nameSpaceOption.HasValue())
-                {
-                    throw new Exception("The option -ns must be informed when usased csharp file type.");
-                }
-
-                // Process
-                var connectionString = connectionStringOption.Value();
-                var table = tableOption.Value();
-                var id = idOption.Value();
-                var description = descriptionOption.Value();
+                var connectionString = GetConnectionString(connectionStringOption.Value(), connectionStringConfigOption.Value());
 
                 // get database values
-                var dataValues = Connection.List(connectionString, table, id, description);
+                var dataValues = Connection.List(connectionString, tableOption.Value(), idOption.Value(), descriptionOption.Value());
 
                 // treatment
                 List<dynamic> listing = new List<dynamic>();
@@ -115,6 +109,22 @@ namespace table2enum
 
                 return Environment.ExitCode;
             });
+        }
+
+        private static string GetConnectionString(string cs, string csConfig)
+        {
+            if (!string.IsNullOrEmpty(cs))
+                return cs;
+
+            var file = Path.GetFullPath(csConfig);
+            XDocument doc = XDocument.Parse(System.IO.File.ReadAllText(file));
+            return doc?
+                    .Root?
+                    .DescendantsAndSelf("connectionStrings")?
+                    .FirstOrDefault()?
+                    .Element("add")?
+                    .Attribute("connectionString")?
+                    .Value ?? throw new Exception("Connection string don't be found");
         }
 
         /// <summary>
