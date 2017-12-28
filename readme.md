@@ -19,9 +19,9 @@ Options:
   -bw | --black-words                      Exclude black words.
 ```
 
-- One of parameters __-csf__ -and __tsf__ must be provided to generate output file.
+- One of parameters __-csf__ -and __-tsf__ must be provided to generate output file.
 - The parameter __-c__ must be provied when the __-csf__ was specified.
-- The parameters __-csf__, __tsf__ and __cscf__ accepts relative paths.
+- The parameters __-csf__, __-tsf__ and __-cscf__ accepts relative paths.
 
 # How to run
 

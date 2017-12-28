@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "table2enum", "src\table2enum\table2enum.csproj", "{8B25370A-7A70-4C62-89C2-15DC434A4129}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "table2enum.core", "src\table2enum\table2enum.core.csproj", "{8B25370A-7A70-4C62-89C2-15DC434A4129}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47FBF236-2B81-45E9-8DC7-2919CCA1A89D}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		readme.md = readme.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "table2enum.framework", "src\table2enum.framework\table2enum.framework.csproj", "{C2AF7079-404F-4156-9AA1-1087418C8AED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "table2enum.standard", "src\table2enum.standard\table2enum.standard.csproj", "{AD683E5F-3724-41E7-BCB4-5C2083979676}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +26,14 @@ Global
 		{8B25370A-7A70-4C62-89C2-15DC434A4129}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B25370A-7A70-4C62-89C2-15DC434A4129}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B25370A-7A70-4C62-89C2-15DC434A4129}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2AF7079-404F-4156-9AA1-1087418C8AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2AF7079-404F-4156-9AA1-1087418C8AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2AF7079-404F-4156-9AA1-1087418C8AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2AF7079-404F-4156-9AA1-1087418C8AED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD683E5F-3724-41E7-BCB4-5C2083979676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD683E5F-3724-41E7-BCB4-5C2083979676}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD683E5F-3724-41E7-BCB4-5C2083979676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD683E5F-3724-41E7-BCB4-5C2083979676}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
