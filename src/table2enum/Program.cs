@@ -33,9 +33,14 @@ namespace table2enum
             Environment.Exit(result);
         }
 
+        private static void Log(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
         private static void HandlerError(object sender, UnhandledExceptionEventArgs e)
         {
-            Console.WriteLine(e.ExceptionObject.ToString());
+            Log(e.ExceptionObject.ToString());
             Environment.Exit(1);
         }
 
@@ -96,15 +101,19 @@ namespace table2enum
                 // generate csharp file
                 if (csharpOption.HasValue())
                 {
+                    var file = Path.GetFullPath(csharpOption.Value());
                     var code = GenereteEnumCsharp(nameSpaceOption.Value(), classNameOption.Value(), listing, importsOption.Values);
-                    System.IO.File.WriteAllText(csharpOption.Value(), code);
+                    Log($"Generated file: {file}");
+                    System.IO.File.WriteAllText(file, code);
                 }
 
                 // generate typescript file
                 if (typescriptOption.HasValue())
                 {
+                    var file = Path.GetFullPath(typescriptOption.Value());
                     var code = GenereteEnumTypescript(classNameOption.Value(), listing);
-                    System.IO.File.WriteAllText(typescriptOption.Value(), code);
+                    Log($"Generated file: {file}");
+                    System.IO.File.WriteAllText(file, code);
                 }
 
                 return Environment.ExitCode;

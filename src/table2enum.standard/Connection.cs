@@ -15,11 +15,9 @@ namespace table2enum
         {
             using (var cnn = new SqlConnection(cs))
             {
-                return cnn.Query($"SELECT {idColumnName} AS ID, {descriptionColumnName} AS DESCRIPTION FROM {tableName}")
-                .ToDictionary(
-                    row => (int)row.ID,
-                    row => (string)row.DESCRIPTION
-                );
+                var q = cnn.Query<KeyValuePair<int, string>>($"SELECT {idColumnName} AS ID, {descriptionColumnName} AS DESCRIPTION FROM {tableName}");
+
+                return new Dictionary<int, string>();
             }
         }
     }
